@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Heat Stress" />
+  <title>Heat Stress Pro</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Heat Stress Pro</p>
+        <h1>Wet bulb, heat index, dew point & RH calculator</h1>
+      </div>
+      <div class="status-pill" id="saveStatus">Offline ready</div>
+    </header>
+
+    <nav class="tabs" aria-label="App sections">
+      <button class="tab active" data-tab="calculator">Calculator</button>
+      <button class="tab" data-tab="forecast">Forecast</button>
+      <button class="tab" data-tab="learn">Learn</button>
+    </nav>
+
+    <section class="panel active" id="calculator">
+      <div class="card input-card">
+        <label>Temperature
+          <div class="input-row"><input id="temp" type="number" inputmode="decimal" step="0.1" placeholder="95" /><span>°F</span></div>
+        </label>
+
+        <div class="segmented" role="group" aria-label="Humidity input type">
+          <button id="modeDew" class="selected" type="button">Dew point</button>
+          <button id="modeRh" type="button">Relative humidity</button>
+        </div>
+
+        <label id="humidityLabel">Dew point
+          <div class="input-row"><input id="humidityValue" type="number" inputmode="decimal" step="0.1" placeholder="74" /><span id="humidityUnit">°F</span></div>
+        </label>
+
+        <div class="quick-actions">
+          <button type="button" id="sampleBtn">Example</button>
+          <button type="button" id="resetBtn">Reset</button>
+        </div>
+      </div>
+
+      <div class="card result-card" id="resultCard">
+        <div class="risk-band" id="riskBand"></div>
+        <p class="result-label">Wet bulb</p>
+        <div class="main-result"><span id="wetBulb">--</span><small>°F</small></div>
+        <p class="risk-text" id="riskText">Enter temperature and dew point or RH.</p>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric"><span>Heat Index</span><strong id="heatIndex">--</strong></div>
+        <div class="metric"><span>Relative Humidity</span><strong id="rhOut">--</strong></div>
+        <div class="metric"><span>Dew Point</span><strong id="dewOut">--</strong></div>
+        <div class="metric"><span>Comfort</span><strong id="comfortOut">--</strong></div>
+      </div>
+    </section>
+
+    <section class="panel" id="forecast">
+      <div class="card">
+        <h2>Forecast tab</h2>
+        <p>This version is a local calculator. A future upgrade can connect to a weather API and show hourly wet-bulb forecasts for Groton, Concord, Mashpee, or any ZIP code.</p>
+        <div class="forecast-list">
+          <div><span>Noon</span><strong>Temp → DP → Wet Bulb</strong></div>
+          <div><span>2 PM</span><strong>Highest heat stress window</strong></div>
+          <div><span>5 PM</span><strong>Evening recovery check</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="learn">
+      <div class="card learn-card">
+        <h2>How to read the numbers</h2>
+        <p><strong>Dew point</strong> is usually the best quick humidity number. Above 70°F feels oppressive.</p>
+        <p><strong>Wet bulb</strong> combines heat and humidity. Around 80°F is very taxing for strenuous outdoor activity.</p>
+        <p><strong>Heat index</strong> estimates how hot it feels in shade. Direct sun can feel substantially worse.</p>
+        <ul>
+          <li>Wet bulb under 75°F: generally manageable</li>
+          <li>75–80°F: uncomfortable; use breaks and water</li>
+          <li>80–85°F: high heat-stress risk with exertion</li>
+          <li>85°F+: dangerous; avoid strenuous activity</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
