@@ -1,1 +1,1 @@
-{"name":"Heat Stress Pro","short_name":"HeatStress","start_url":"./","display":"standalone","background_color":"#0b1020","theme_color":"#111827","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
+{"name":"Heat Stress Pro","short_name":"Heat Stress","start_url":"./","display":"standalone","background_color":"#07111f","theme_color":"#08111f","description":"Wet bulb, heat index, forecasts, favorites, and heat-stress guidance.","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}

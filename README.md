@@ -1,26 +1,24 @@
-# Heat Stress Pro v2.0
+# Heat Stress Pro v3.0
 
-Static GitHub Pages app for wet bulb, heat index, dew point/RH conversion, and U.S. hourly forecasts.
+Static GitHub Pages app for wet-bulb temperature, heat index, forecasts, favorites, regional comparison, threshold flags, and activity guidance.
 
-## Upgrade steps
+## Upload to GitHub
 
-1. Extract `heat-stress-pro-v2.zip`.
-2. Open your GitHub repo: https://github.com/bmccann15/heat-stress-pro
+1. Extract this ZIP.
+2. Open your repository: `https://github.com/bmccann15/heat-stress-pro`.
 3. Click **Add file → Upload files**.
-4. Drag these extracted files into the repo root:
-   - `index.html`
-   - `manifest.json`
-   - `icon.svg`
-   - `service-worker.js`
-   - `README.md`
-5. Commit changes.
-6. Wait for GitHub Pages to redeploy.
-7. Open https://bmccann15.github.io/heat-stress-pro/
+4. Drag all extracted files into GitHub.
+5. Commit with message: `Upgrade to Heat Stress Pro v3.0`.
+6. Wait for **Actions** to show a green check.
+7. Open: `https://bmccann15.github.io/heat-stress-pro/`.
 
-## Forecast source
+## iPhone install
 
-Forecast mode uses free public APIs:
-- Zippopotam.us for U.S. ZIP code to lat/lon lookup
-- National Weather Service API for hourly forecast data
+Open the GitHub Pages URL in Safari, then **Share → Add to Home Screen**.
 
-NWS data only supports U.S. locations.
+## Notes
+
+- Forecast lookup works for U.S. locations.
+- Weather data comes from the National Weather Service API.
+- ZIP lookup uses zippopotam.us.
+- Browser notifications are limited on iOS PWAs; threshold exceedance is highlighted when the app is opened.
