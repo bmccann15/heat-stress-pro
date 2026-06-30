@@ -1,109 +1,37 @@
-const $ = (id) => document.getElementById(id);
-const temp = $('temp');
-const humidityValue = $('humidityValue');
-const modeDew = $('modeDew');
-const modeRh = $('modeRh');
-const humidityLabel = $('humidityLabel');
-const humidityUnit = $('humidityUnit');
-let mode = localStorage.getItem('hs_mode') || 'dew';
-
-function cFromF(f) { return (f - 32) / 1.8; }
-function fFromC(c) { return c * 1.8 + 32; }
-function saturationVaporPressureC(t) { return Math.exp((17.67 * t) / (t + 243.5)); }
-function rhFromTempDewF(tempF, dewF) {
-  const T = cFromF(tempF), Td = cFromF(dewF);
-  return 100 * saturationVaporPressureC(Td) / saturationVaporPressureC(T);
+const APP_VERSION = '3.1.0';
+const $ = id => document.getElementById(id);
+const state = { hourly: [], place: null, favorites: JSON.parse(localStorage.getItem('hsp_favorites') || '[]'), alert: parseFloat(localStorage.getItem('hsp_alert') || '80'), unit: localStorage.getItem('hsp_unit') || 'F' };
+const DEFAULT_REGIONAL = [
+  { name:'Groton, MA', zip:'01450' }, { name:'Concord, MA', zip:'01742' }, { name:'Boston, MA', zip:'02108' },
+  { name:'Providence, RI', zip:'02903' }, { name:'Hartford, CT', zip:'06103' }, { name:'New York, NY', zip:'10001' },
+  { name:'Philadelphia, PA', zip:'19103' }, { name:'Washington, DC', zip:'20001' }
+];
+function cFromF(f){return (f-32)/1.8} function fFromC(c){return c*1.8+32}
+function es(tC){return 6.112*Math.exp((17.67*tC)/(tC+243.5))}
+function rhFromTempDewF(tF, dF){return 100*es(cFromF(dF))/es(cFromF(tF))}
+function dewFromTempRhF(tF, rh){const T=cFromF(tF), a=Math.log(Math.max(.1,rh)/100)+(17.67*T)/(T+243.5);return fFromC((243.5*a)/(17.67-a))}
+function wetBulbStullF(tF,rh){const T=cFromF(tF), RH=Math.max(1,Math.min(100,rh));const Tw=T*Math.atan(.151977*Math.sqrt(RH+8.313659))+Math.atan(T+RH)-Math.atan(RH-1.676331)+.00391838*Math.pow(RH,1.5)*Math.atan(.023101*RH)-4.686035;return fFromC(Tw)}
+function heatIndexF(T,RH){if(T<80)return T;const c1=-42.379,c2=2.04901523,c3=10.14333127,c4=-.22475541,c5=-.00683783,c6=-.05481717,c7=.00122874,c8=.00085282,c9=-.00000199;let HI=c1+c2*T+c3*RH+c4*T*RH+c5*T*T+c6*RH*RH+c7*T*T*RH+c8*T*RH*RH+c9*T*T*RH*RH;if(RH<13&&T>=80&&T<=112)HI-=((13-RH)/4)*Math.sqrt((17-Math.abs(T-95))/17);if(RH>85&&T>=80&&T<=87)HI+=((RH-85)/10)*((87-T)/5);return HI}
+function vaporPressureMb(dewF){return es(cFromF(dewF))}
+function riskForWetBulb(wb){ if(wb>=88)return {label:'Extreme danger',color:'#a855f7',pct:100,msg:'Avoid strenuous outdoor activity where possible.'}; if(wb>=85)return {label:'Dangerous',color:'#ef4444',pct:88,msg:'Long exposure and exertion are risky.'}; if(wb>=80)return {label:'High risk',color:'#f97316',pct:74,msg:'Use shade, cooling, hydration, and frequent breaks.'}; if(wb>=75)return {label:'Elevated',color:'#eab308',pct:58,msg:'Hard activity will feel much tougher.'}; if(wb>=70)return {label:'Humid',color:'#84cc16',pct:38,msg:'Generally manageable, but sun and exertion still matter.'}; return {label:'Lower',color:'#22c55e',pct:20,msg:'Lower wet-bulb stress.'}; }
+function fmt(n,d=0){return Number.isFinite(n)?n.toFixed(d):'--'} function hourLabel(iso){return new Date(iso).toLocaleTimeString([], {hour:'numeric'})} function dayLabel(iso){return new Date(iso).toLocaleDateString([], {weekday:'short',month:'numeric',day:'numeric'})}
+function setStatus(msg){$('status').textContent=msg}
+function setRiskVars(wb){const r=riskForWetBulb(wb);document.documentElement.style.setProperty('--risk',r.color);return r}
+async function zipToCoords(zip){const r=await fetch(`https://api.zippopotam.us/us/${encodeURIComponent(zip)}`); if(!r.ok)throw new Error('ZIP not found.'); const j=await r.json(); const p=j.places[0]; return {lat:+p.latitude, lon:+p.longitude, name:`${p['place name']}, ${j['state abbreviation']} ${zip}`};}
+async function nwsHourly(lat,lon){const point=await fetch(`https://api.weather.gov/points/${lat.toFixed(4)},${lon.toFixed(4)}`,{headers:{Accept:'application/geo+json'}}); if(!point.ok)throw new Error('NWS point lookup failed.'); const pj=await point.json(); const hourlyUrl=pj.properties.forecastHourly; const gridUrl=pj.properties.forecastGridData; const [hr,grid]=await Promise.all([fetch(hourlyUrl),fetch(gridUrl)]); if(!hr.ok)throw new Error('NWS hourly forecast failed.'); const hj=await hr.json(); let gridJ=null; if(grid.ok)gridJ=await grid.json(); const dewVals=gridJ?.properties?.dewpoint?.values||[]; const rhVals=gridJ?.properties?.relativeHumidity?.values||[]; return hj.properties.periods.slice(0,120).map(p=>{const tempF=p.temperatureUnit==='C'?fFromC(p.temperature):p.temperature; const dewC=valueForTime(dewVals,p.startTime); const rhGrid=valueForTime(rhVals,p.startTime); let dewF=Number.isFinite(dewC)?fFromC(dewC):NaN; let rh=Number.isFinite(rhGrid)?rhGrid:(Number.isFinite(dewF)?rhFromTempDewF(tempF,dewF):NaN); if(!Number.isFinite(dewF)&&Number.isFinite(rh))dewF=dewFromTempRhF(tempF,rh); const wb=Number.isFinite(rh)?wetBulbStullF(tempF,rh):NaN; const hi=Number.isFinite(rh)?heatIndexF(tempF,rh):NaN; return {time:p.startTime, tempF, dewF, rh, wb, hi, short:p.shortForecast};}).filter(x=>Number.isFinite(x.wb));}
+function valueForTime(values, iso){const t=new Date(iso).getTime(); for(const v of values){const [start,dur]=v.validTime.split('/'); const s=new Date(start).getTime(); const e=s+durationMs(dur); if(t>=s&&t<e)return v.value;} return NaN;}
+function durationMs(d){const h=/PT(\d+)H/.exec(d); const m=/PT(?:(\d+)H)?(?:(\d+)M)?/.exec(d); if(h)return +h[1]*3600000; if(m)return ((+m[1]||0)*60+(+m[2]||0))*60000; const days=/P(\d+)D/.exec(d); if(days)return +days[1]*86400000; return 3600000;}
+async function loadWeatherByZip(zip){setStatus('Loading forecast...'); const loc=await zipToCoords(zip); await loadWeatherByCoords(loc.lat,loc.lon,loc.name,zip);}
+async function loadWeatherByCoords(lat,lon,name='Current location',zip=''){state.hourly=await nwsHourly(lat,lon); state.place={lat,lon,name,zip}; localStorage.setItem('hsp_last_place',JSON.stringify(state.place)); renderWeather(); setStatus(`Loaded ${name}.`);}
+function renderWeather(){const h=state.hourly[0]; if(!h)return; const r=setRiskVars(h.wb); $('placeName').textContent=state.place?.name||'Loaded location'; $('currentWb').textContent=fmt(h.wb,1); $('riskLine').textContent=`${r.label}: ${r.msg}`; $('riskMeter').style.width=`${r.pct}%`; $('currentTemp').textContent=`${fmt(h.tempF)}°F`; $('currentDew').textContent=`${fmt(h.dewF,1)}°F`; $('currentRh').textContent=`${fmt(h.rh)}%`; $('currentHi').textContent=`${fmt(h.hi)}°F`; const today=state.hourly.slice(0,24); const peak=today.reduce((a,b)=>b.wb>a.wb?b:a,today[0]); $('peakToday').textContent=`${fmt(peak.wb,1)}°F`; $('worstHour').textContent=hourLabel(peak.time); $('alertStatus').textContent=peak.wb>=state.alert?`Exceeds ${state.alert}°F`:`Below ${state.alert}°F`; renderActivity(); renderHourlyList(); renderDailyList(); drawChart(); renderFavorites();}
+function renderActivity(){const peak=state.hourly.slice(0,24).reduce((a,b)=>b.wb>a.wb?b:a,state.hourly[0]); if(!peak){$('activityAdvice').textContent='Load weather for activity-specific guidance.';return;} const a=$('activitySelect').value; const wb=peak.wb; let msg=''; if(a==='light') msg= wb>=85?'Keep it brief and seek cooling often.':wb>=80?'Prefer shade and carry water.':wb>=75?'Manageable with breaks and hydration.':'Generally fine.'; if(a==='moderate') msg= wb>=85?'Postpone or move indoors if possible.':wb>=80?'Reduce intensity; frequent cooling breaks.':wb>=75?'Plan extra breaks and shade.':'Generally manageable.'; if(a==='hard') msg= wb>=85?'Avoid hard outdoor workouts/sports.':wb>=80?'Strongly consider moving indoors or shortening activity.':wb>=75?'Expect performance drop; hydrate and cool.':'Reasonable with normal precautions.'; if(a==='work') msg= wb>=85?'Use aggressive work/rest/cooling controls.':wb>=80?'High-risk period; schedule breaks and shade.':wb>=75?'Build in recovery breaks.':'Monitor conditions.'; $('activityAdvice').textContent=`Peak ${fmt(wb,1)}°F wet bulb around ${hourLabel(peak.time)}. ${msg}`;}
+function renderHourlyList(){const root=$('hourlyList'); root.innerHTML=''; state.hourly.slice(0,24).forEach(h=>{const r=riskForWetBulb(h.wb); const el=document.createElement('div'); el.className='row'; el.innerHTML=`<strong>${hourLabel(h.time)}</strong><span>${fmt(h.tempF)}°F temp</span><span>${fmt(h.dewF)}°F dew</span><span style="color:${r.color}">${fmt(h.wb,1)}°F WB</span>`; root.appendChild(el);});}
+function renderDailyList(){const days={}; state.hourly.slice(0,120).forEach(h=>{const k=new Date(h.time).toDateString(); if(!days[k]||h.wb>days[k].wb)days[k]=h;}); const root=$('dailyList'); root.innerHTML=''; Object.values(days).slice(0,5).forEach(h=>{const r=riskForWetBulb(h.wb); const el=document.createElement('div'); el.className='row'; el.innerHTML=`<strong>${dayLabel(h.time)}</strong><span>${hourLabel(h.time)}</span><span>${fmt(h.tempF)}°F temp</span><span style="color:${r.color}">${fmt(h.wb,1)}°F WB</span>`; root.appendChild(el);});}
+function drawChart(){const c=$('hourlyChart'), ctx=c.getContext('2d'), data=state.hourly.slice(0,24); ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='#071426'; ctx.fillRect(0,0,c.width,c.height); if(!data.length)return; const vals=data.map(d=>d.wb), min=Math.min(65,Math.floor(Math.min(...vals)-2)), max=Math.max(88,Math.ceil(Math.max(...vals)+2)); const pad=36; ctx.strokeStyle='#20324e'; ctx.fillStyle='#9fb0c8'; ctx.font='12px -apple-system,Arial'; [70,75,80,85,88].forEach(y=>{const yy=c.height-pad-((y-min)/(max-min))*(c.height-2*pad); ctx.beginPath(); ctx.moveTo(pad,yy); ctx.lineTo(c.width-pad,yy); ctx.stroke(); ctx.fillText(`${y}°`,6,yy+4);}); ctx.beginPath(); data.forEach((d,i)=>{const x=pad+i*(c.width-2*pad)/(data.length-1); const y=c.height-pad-((d.wb-min)/(max-min))*(c.height-2*pad); if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);}); ctx.strokeStyle='#38bdf8'; ctx.lineWidth=3; ctx.stroke();}
+function renderFavorites(){const root=$('favoritesList'); root.innerHTML=''; state.favorites.forEach(f=>{const b=document.createElement('button'); b.className='chip'; b.textContent=f.name; b.onclick=()=>loadWeatherByCoords(f.lat,f.lon,f.name,f.zip).catch(e=>setStatus(e.message)); root.appendChild(b);});}
+async function refreshRegional(){const root=$('regionalBoard'); root.innerHTML='<p class="status">Loading regional board...</p>'; const list=[...DEFAULT_REGIONAL,...state.favorites.filter(f=>f.zip).map(f=>({name:f.name,zip:f.zip}))]; root.innerHTML=''; for(const item of list){const card=document.createElement('div'); card.className='regional-card'; card.innerHTML=`<strong>${item.name}</strong><p>Loading...</p>`; root.appendChild(card); try{const loc=await zipToCoords(item.zip); const hours=await nwsHourly(loc.lat,loc.lon); const peak=hours.slice(0,24).reduce((a,b)=>b.wb>a.wb?b:a,hours[0]); const r=riskForWetBulb(peak.wb); card.innerHTML=`<strong>${item.name}</strong><p style="color:${r.color};font-size:26px;margin:8px 0">${fmt(peak.wb,1)}°F</p><p>${r.label} • peak ${hourLabel(peak.time)}</p>`;}catch(e){card.innerHTML=`<strong>${item.name}</strong><p>Unable to load.</p>`;}}
 }
-function dewFromTempRhF(tempF, rh) {
-  const T = cFromF(tempF);
-  const alpha = Math.log(rh / 100) + (17.67 * T) / (T + 243.5);
-  return fFromC((243.5 * alpha) / (17.67 - alpha));
-}
-function wetBulbStullF(tempF, rh) {
-  const T = cFromF(tempF);
-  const RH = Math.max(1, Math.min(100, rh));
-  const Tw = T * Math.atan(0.151977 * Math.sqrt(RH + 8.313659)) +
-    Math.atan(T + RH) - Math.atan(RH - 1.676331) +
-    0.00391838 * Math.pow(RH, 1.5) * Math.atan(0.023101 * RH) - 4.686035;
-  return fFromC(Tw);
-}
-function heatIndexF(T, RH) {
-  if (T < 80) return T;
-  const c1=-42.379,c2=2.04901523,c3=10.14333127,c4=-0.22475541,c5=-0.00683783,c6=-0.05481717,c7=0.00122874,c8=0.00085282,c9=-0.00000199;
-  let HI = c1 + c2*T + c3*RH + c4*T*RH + c5*T*T + c6*RH*RH + c7*T*T*RH + c8*T*RH*RH + c9*T*T*RH*RH;
-  if (RH < 13 && T >= 80 && T <= 112) HI -= ((13-RH)/4) * Math.sqrt((17-Math.abs(T-95))/17);
-  if (RH > 85 && T >= 80 && T <= 87) HI += ((RH-85)/10) * ((87-T)/5);
-  return HI;
-}
-function riskForWetBulb(wb) {
-  if (wb >= 85) return ['Extreme', '#a855f7', 'Dangerous wet-bulb level. Avoid strenuous outdoor activity.'];
-  if (wb >= 80) return ['High', '#ef4444', 'High heat-stress risk with exertion. Use shade, cooling, and frequent breaks.'];
-  if (wb >= 75) return ['Elevated', '#f97316', 'Uncomfortable and taxing. Hydrate and reduce intensity.'];
-  if (wb >= 70) return ['Humid', '#eab308', 'Humid but generally manageable for light activity.'];
-  return ['Lower', '#22c55e', 'Lower wet-bulb stress, though sun and exertion still matter.'];
-}
-function comfortFromDew(dp) {
-  if (dp >= 75) return 'Tropical';
-  if (dp >= 70) return 'Oppressive';
-  if (dp >= 65) return 'Humid';
-  if (dp >= 60) return 'Sticky';
-  return 'Comfortable';
-}
-function setMode(next) {
-  mode = next;
-  localStorage.setItem('hs_mode', mode);
-  modeDew.classList.toggle('selected', mode === 'dew');
-  modeRh.classList.toggle('selected', mode === 'rh');
-  humidityLabel.childNodes[0].nodeValue = mode === 'dew' ? 'Dew point' : 'Relative humidity';
-  humidityUnit.textContent = mode === 'dew' ? '°F' : '%';
-  humidityValue.placeholder = mode === 'dew' ? '74' : '50';
-  calculate();
-}
-function calculate() {
-  const T = parseFloat(temp.value);
-  const H = parseFloat(humidityValue.value);
-  localStorage.setItem('hs_temp', temp.value);
-  localStorage.setItem('hs_humidity', humidityValue.value);
-  if (!Number.isFinite(T) || !Number.isFinite(H)) return renderEmpty();
-  let RH = mode === 'dew' ? rhFromTempDewF(T, H) : H;
-  if (mode === 'dew' && H > T) return renderMessage('Dew point cannot exceed temperature.');
-  if (RH < 0 || RH > 100) return renderMessage('Relative humidity must be 0–100%.');
-  RH = Math.max(1, Math.min(100, RH));
-  const DP = mode === 'dew' ? H : dewFromTempRhF(T, RH);
-  const WB = wetBulbStullF(T, RH);
-  const HI = heatIndexF(T, RH);
-  const [risk, color, msg] = riskForWetBulb(WB);
-  document.documentElement.style.setProperty('--risk', color);
-  $('wetBulb').textContent = WB.toFixed(1);
-  $('riskText').textContent = `${risk}: ${msg}`;
-  $('heatIndex').textContent = `${HI.toFixed(0)}°F`;
-  $('rhOut').textContent = `${RH.toFixed(0)}%`;
-  $('dewOut').textContent = `${DP.toFixed(1)}°F`;
-  $('comfortOut').textContent = comfortFromDew(DP);
-}
-function renderEmpty() {
-  $('wetBulb').textContent = '--';
-  $('riskText').textContent = 'Enter temperature and dew point or RH.';
-  $('heatIndex').textContent = '--'; $('rhOut').textContent = '--'; $('dewOut').textContent = '--'; $('comfortOut').textContent = '--';
-  document.documentElement.style.setProperty('--risk', '#22c55e');
-}
-function renderMessage(msg) { renderEmpty(); $('riskText').textContent = msg; }
-
-document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => {
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active'); $(btn.dataset.tab).classList.add('active');
-}));
-modeDew.addEventListener('click', () => setMode('dew'));
-modeRh.addEventListener('click', () => setMode('rh'));
-[temp, humidityValue].forEach(el => el.addEventListener('input', calculate));
-$('sampleBtn').addEventListener('click', () => { temp.value = 95; humidityValue.value = mode === 'dew' ? 74 : 50; calculate(); });
-$('resetBtn').addEventListener('click', () => { temp.value=''; humidityValue.value=''; calculate(); });
-
-temp.value = localStorage.getItem('hs_temp') || '';
-humidityValue.value = localStorage.getItem('hs_humidity') || '';
-setMode(mode);
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
-}
+function calculateManual(){const T=+$('manualTemp').value, H=+$('manualHumidity').value, isF=state.unit==='F', mode=$('manualMode').value; if(!Number.isFinite(T)||!Number.isFinite(H)){renderManualEmpty();return;} const tF=isF?T:fFromC(T); let rh=mode==='dew'?rhFromTempDewF(tF,isF?H:fFromC(H)):H; if(mode==='dew' && H>T){$('manualRisk').textContent='Dew point cannot exceed temperature.';return;} if(rh<0||rh>100){$('manualRisk').textContent='Relative humidity must be 0–100%.';return;} rh=Math.max(1,Math.min(100,rh)); const dewF=mode==='dew'?(isF?H:fFromC(H)):dewFromTempRhF(tF,rh); const wbF=wetBulbStullF(tF,rh), hiF=heatIndexF(tF,rh); const r=setRiskVars(wbF); $('manualWb').textContent=fmt(isF?wbF:cFromF(wbF),1); $('manualWbUnit').textContent=isF?'°F wet bulb':'°C wet bulb'; $('manualRisk').textContent=`${r.label}: ${r.msg}`; $('manualHi').textContent=isF?`${fmt(hiF)}°F`:`${fmt(cFromF(hiF),1)}°C`; $('manualDew').textContent=isF?`${fmt(dewF,1)}°F`:`${fmt(cFromF(dewF),1)}°C`; $('manualRh').textContent=`${fmt(rh)}%`; $('manualVp').textContent=`${fmt(vaporPressureMb(dewF),1)} mb`;}
+function renderManualEmpty(){['manualWb','manualHi','manualDew','manualRh','manualVp'].forEach(id=>$(id).textContent='--'); $('manualRisk').textContent='Enter temperature and humidity.';}
+function init(){ $('versionLabel').textContent=APP_VERSION; $('alertInput').value=state.alert; renderFavorites(); document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); $(btn.dataset.tab).classList.add('active'); if(btn.dataset.tab==='forecast')drawChart();})); $('loadZipBtn').onclick=()=>loadWeatherByZip($('zipInput').value.trim()).catch(e=>setStatus(e.message)); $('locBtn').onclick=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>loadWeatherByCoords(p.coords.latitude,p.coords.longitude).catch(e=>setStatus(e.message)),()=>setStatus('Location permission denied.')):setStatus('Geolocation not available.'); $('activitySelect').onchange=renderActivity; $('saveAlertBtn').onclick=()=>{state.alert=parseFloat($('alertInput').value)||80; localStorage.setItem('hsp_alert',state.alert); renderWeather();}; $('saveFavoriteBtn').onclick=()=>{if(!state.place)return; if(!state.favorites.some(f=>f.name===state.place.name)){state.favorites.push(state.place); localStorage.setItem('hsp_favorites',JSON.stringify(state.favorites)); renderFavorites();}}; $('clearFavoritesBtn').onclick=()=>{state.favorites=[]; localStorage.removeItem('hsp_favorites'); renderFavorites();}; $('refreshRegionalBtn').onclick=refreshRegional; ['manualTemp','manualHumidity','manualMode'].forEach(id=>$(id).addEventListener('input',calculateManual)); $('manualMode').onchange=()=>{$('manualHumidityLabel').textContent=$('manualMode').value==='dew'?'Dew point':'Relative humidity'; calculateManual();}; $('manualCalcBtn').onclick=calculateManual; $('unitF').onclick=()=>{state.unit='F';localStorage.setItem('hsp_unit','F');$('unitF').classList.add('selected');$('unitC').classList.remove('selected');calculateManual();}; $('unitC').onclick=()=>{state.unit='C';localStorage.setItem('hsp_unit','C');$('unitC').classList.add('selected');$('unitF').classList.remove('selected');calculateManual();}; if(state.unit==='C')$('unitC').click(); const last=JSON.parse(localStorage.getItem('hsp_last_place')||'null'); if(last){state.place=last; setStatus(`Last location: ${last.name}. Tap Load or favorite to refresh.`);} if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=3.1.0').catch(()=>{}));}
+init();

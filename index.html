@@ -3,76 +3,153 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#08111f" />
+  <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="Heat Stress Pro" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon.svg" />
-  <title>Heat Stress Pro v3</title>
-  <style>
-    :root{--bg:#07111f;--panel:rgba(13,23,42,.82);--card:rgba(20,33,55,.9);--text:#f8fafc;--muted:#9fb0c7;--border:rgba(255,255,255,.13);--accent:#35d0ff;--good:#22c55e;--mod:#facc15;--high:#fb923c;--danger:#ef4444;--extreme:#a855f7;--shadow:0 18px 42px rgba(0,0,0,.28)}*{box-sizing:border-box}html{background:#07111f}body{margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;background:radial-gradient(circle at top left,rgba(14,165,233,.34),transparent 32%),radial-gradient(circle at top right,rgba(168,85,247,.18),transparent 28%),linear-gradient(180deg,#07111f,#020617)}.wrap{width:min(1120px,100%);margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 14px 34px}.hero{padding:8px 6px 6px}.eyebrow{color:var(--accent);font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.11em}.hero h1{font-size:34px;line-height:1.02;margin:7px 0 6px;letter-spacing:-.04em}.hero p{margin:0;color:var(--muted);font-size:15px;line-height:1.35}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:15px 0}.tab{border:1px solid var(--border);background:rgba(15,23,42,.72);color:var(--text);padding:10px 5px;border-radius:16px;font-size:12px;font-weight:900}.tab.active{background:linear-gradient(135deg,#38bdf8,#67e8f9);color:#06263c;border:0}.grid{display:grid;grid-template-columns:1fr;gap:14px}.panel{background:var(--panel);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:24px;padding:15px;backdrop-filter:blur(12px)}.panel h2{margin:0 0 12px;font-size:21px;letter-spacing:-.02em}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.field{margin-bottom:12px}label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin:0 0 6px}input,select,button{width:100%;border-radius:15px;border:1px solid var(--border);font-size:17px;padding:13px;background:#0f172a;color:var(--text)}button{cursor:pointer;font-weight:950}.primary{background:linear-gradient(135deg,#0ea5e9,#22d3ee);color:#082f49;border:0}.secondary{background:#1e293b}.ghost{background:transparent}.hidden{display:none!important}.status{color:var(--muted);font-size:13px;margin-top:9px;line-height:1.35}.error{color:#fecaca}.success{color:#bbf7d0}.result-main{text-align:center;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(56,189,248,.18),rgba(15,23,42,.55));border:1px solid var(--border)}.big{font-size:62px;font-weight:1000;letter-spacing:-.06em}.subbig{font-size:20px;color:#dbeafe;font-weight:850}.smallmuted{color:var(--muted);font-size:12px}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:11px}.metric,.tile{background:rgba(15,23,42,.74);border:1px solid var(--border);border-radius:17px;padding:11px}.metric .k,.tile .k{font-size:12px;color:var(--muted);font-weight:850}.metric .v,.tile .v{font-size:24px;font-weight:1000;margin-top:2px}.badge{display:inline-flex;padding:7px 10px;border-radius:999px;font-weight:950;margin:8px 0;color:#05121d;font-size:12px}.good{background:var(--good)}.moderate{background:var(--mod)}.high{background:var(--high)}.danger{background:var(--danger);color:#fff}.extreme{background:var(--extreme);color:#fff}.advice{font-size:15px;color:#dbeafe;line-height:1.45;margin-top:8px}.cards{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}.hour,.day,.fav{display:grid;grid-template-columns:64px 1fr 76px;gap:10px;align-items:center;background:rgba(15,23,42,.72);border:1px solid var(--border);border-radius:17px;padding:12px}.day{grid-template-columns:90px 1fr 78px}.fav{grid-template-columns:1fr 80px}.bar{height:10px;background:#1e293b;border-radius:999px;overflow:hidden;margin-top:7px}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#facc15,#fb923c,#ef4444,#a855f7);width:30%}.pill{font-size:12px;padding:4px 7px;border-radius:999px;background:#263244;color:#e2e8f0;display:inline-block;margin:2px 3px 2px 0}.chart{width:100%;height:230px;background:rgba(15,23,42,.62);border:1px solid var(--border);border-radius:18px}.mapgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mapcell{min-height:96px;border:1px solid var(--border);border-radius:18px;padding:12px;background:rgba(15,23,42,.72)}.mapcell .place{font-weight:1000}.mapcell .wb{font-size:31px;font-weight:1000;letter-spacing:-.04em}.footer{color:var(--muted);font-size:12px;padding:10px 4px;line-height:1.4}.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.toggle{display:flex;gap:8px;align-items:center;justify-content:space-between}.switch{width:auto;transform:scale(1.25)}@media(min-width:850px){.grid{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}.hero h1{font-size:48px}.cards{grid-template-columns:1fr 1fr}.mapgrid{grid-template-columns:repeat(4,1fr)}.nav{width:760px}.big{font-size:72px}}
-  </style>
+  <meta name="apple-mobile-web-app-title" content="Heat Stress Pro" />
+  <title>Heat Stress Pro</title>
+  <link rel="manifest" href="manifest.webmanifest?v=3.1.0" />
+  <link rel="icon" href="icon.svg?v=3.1.0" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css?v=3.1.0" />
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero"><div class="eyebrow">Heat Stress Pro v3.0</div><h1>Wet-bulb forecast, alerts, favorites, and activity guidance.</h1><p>A free GitHub Pages weather app using public U.S. forecast data. Save it to your iPhone Home Screen.</p></section>
-    <nav class="nav"><button class="tab active" data-tab="dash">Today</button><button class="tab" data-tab="forecast">Forecast</button><button class="tab" data-tab="map">Map</button><button class="tab" data-tab="calc">Calc</button><button class="tab" data-tab="guide">Guide</button></nav>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Heat Stress Pro</p>
+        <h1>Wet-bulb forecast, calculator, and activity guidance</h1>
+        <p class="subhead">Free static weather app for GitHub Pages. Version <strong id="versionLabel">3.1.0</strong></p>
+      </div>
+      <div class="hero-badge" id="installHint">iPhone ready</div>
+    </header>
 
-    <main id="dash" class="tabpane grid">
-      <section class="panel wide"><h2>Location</h2><div class="row"><div><label>ZIP code</label><input id="zip" inputmode="numeric" placeholder="01450" maxlength="5"></div><div><label>&nbsp;</label><button class="primary" id="zipBtn">Load Weather</button></div></div><div class="toolbar"><button class="secondary" id="locBtn">Use My Location</button></div><div id="status" class="status">Enter a U.S. ZIP code or use location.</div></section>
-      <section class="panel"><h2>Current / Next Hour</h2><div class="result-main"><div class="smallmuted" id="placeLabel">No location loaded</div><div class="big" id="dashWb">--</div><div class="subbig" id="dashTemp">--</div><div id="dashBadge" class="badge good">--</div><div id="dashAdvice" class="advice">Load a forecast to see heat-stress guidance.</div></div><div class="metrics"><div class="metric"><div class="k">Heat Index</div><div class="v" id="dashHi">--</div></div><div class="metric"><div class="k">Dew Point</div><div class="v" id="dashDp">--</div></div><div class="metric"><div class="k">Humidity</div><div class="v" id="dashRh">--</div></div><div class="metric"><div class="k">Peak Today</div><div class="v" id="dashPeak">--</div></div></div></section>
-      <section class="panel"><h2>Activity Guidance</h2><div class="field"><label>Activity</label><select id="activity"><option value="light">Light: walking / errands</option><option value="moderate">Moderate: yard work / hike</option><option value="hard">Hard: running / hockey / sports</option><option value="work">Outdoor work / long exposure</option></select></div><div id="activityAdvice" class="advice">Load weather for activity-specific guidance.</div><div class="metrics"><div class="metric"><div class="k">Suggested alert</div><div class="v" id="suggestAlert">--</div></div><div class="metric"><div class="k">Worst hour</div><div class="v" id="worstHour">--</div></div></div></section>
-      <section class="panel wide"><h2>Hourly Wet Bulb Chart</h2><canvas id="chart" class="chart" width="900" height="260"></canvas></section>
-    </main>
+    <nav class="tabs" aria-label="App sections">
+      <button class="tab active" data-tab="today">Today</button>
+      <button class="tab" data-tab="forecast">Forecast</button>
+      <button class="tab" data-tab="map">Regional</button>
+      <button class="tab" data-tab="calc">Calc</button>
+      <button class="tab" data-tab="guide">Guide</button>
+    </nav>
 
-    <main id="forecast" class="tabpane hidden grid">
-      <section class="panel"><h2>Next 24 Hours</h2><div id="hours" class="cards"></div></section>
-      <section class="panel"><h2>5-Day Peak Outlook</h2><div id="days" class="cards"></div></section>
-      <section class="panel wide"><h2>Alerts & Favorites</h2><div class="row"><div><label>Wet-bulb alert threshold</label><input id="alertThreshold" type="number" value="80" step="0.5"></div><div><label>&nbsp;</label><button class="primary" id="saveAlert">Save Alert Threshold</button></div></div><div class="toolbar"><button class="secondary" id="addFav">Save Current Favorite</button><button class="secondary" id="clearFavs">Clear Favorites</button></div><div id="favList" class="cards"></div><div class="status">Browser notifications are limited on iPhone web apps. This app highlights threshold exceedance when opened.</div></section>
-    </main>
+    <main>
+      <section id="today" class="panel active">
+        <div class="card location-card">
+          <div>
+            <h2>Location</h2>
+            <p>Enter a U.S. ZIP code or use your current location.</p>
+          </div>
+          <div class="input-row">
+            <label class="field"><span>ZIP code</span><input id="zipInput" inputmode="numeric" maxlength="5" placeholder="01450" /></label>
+            <button id="loadZipBtn" class="primary">Load Weather</button>
+            <button id="locBtn" class="secondary">Use My Location</button>
+          </div>
+          <p id="status" class="status">Ready.</p>
+        </div>
 
-    <main id="map" class="tabpane hidden grid">
-      <section class="panel wide"><h2>Regional Wet-Bulb Board</h2><p class="advice">Quick compare across saved/default Northeast locations. Tap refresh to load forecast peaks from public NWS data.</p><button class="primary" id="refreshMap">Refresh Regional Board</button><div id="mapStatus" class="status"></div><div id="mapGrid" class="mapgrid" style="margin-top:12px"></div></section>
-    </main>
+        <div class="grid two">
+          <div class="card current-card">
+            <p class="eyebrow">Current / next forecast hour</p>
+            <h2 id="placeName">No location loaded</h2>
+            <div class="big-readout"><span id="currentWb">--</span><small>°F wet bulb</small></div>
+            <p id="riskLine" class="risk-line">Load weather to see heat-stress guidance.</p>
+            <div class="meter"><div id="riskMeter" class="meter-fill"></div></div>
+            <div class="metric-grid">
+              <div><span>Temp</span><strong id="currentTemp">--</strong></div>
+              <div><span>Dew point</span><strong id="currentDew">--</strong></div>
+              <div><span>Humidity</span><strong id="currentRh">--</strong></div>
+              <div><span>Heat index</span><strong id="currentHi">--</strong></div>
+            </div>
+          </div>
 
-    <main id="calc" class="tabpane hidden grid">
-      <section class="panel"><h2>Manual Calculator</h2><div class="row"><div class="field"><label>Temperature</label><input id="temp" inputmode="decimal" type="number" value="95" step="0.1"></div><div class="field"><label>Units</label><select id="units"><option value="F">°F</option><option value="C">°C</option></select></div></div><div class="field"><label>Humidity Input</label><select id="inputType"><option value="dewpoint">Dew Point</option><option value="rh">Relative Humidity</option></select></div><div class="field"><label id="secondLabel">Dew Point</label><input id="second" inputmode="decimal" type="number" value="74" step="0.1"></div><button class="primary" id="calcBtn">Calculate</button><div class="status">Calculates automatically as you type.</div></section>
-      <section class="panel"><h2>Result</h2><div class="result-main"><div class="smallmuted">Wet Bulb</div><div id="wbBig" class="big">--</div><div id="riskBadge" class="badge good">--</div><div id="advice" class="advice">Enter temperature and humidity.</div></div><div class="metrics"><div class="metric"><div class="k">Heat Index</div><div id="hiVal" class="v">--</div></div><div class="metric"><div class="k">Dew Point</div><div id="dpVal" class="v">--</div></div><div class="metric"><div class="k">Relative Humidity</div><div id="rhVal" class="v">--</div></div><div class="metric"><div class="k">Vapor Pressure</div><div id="vpVal" class="v">--</div></div></div></section>
-    </main>
+          <div class="card guidance-card">
+            <h2>Activity Guidance</h2>
+            <label class="field"><span>Activity</span>
+              <select id="activitySelect">
+                <option value="light">Light: walking / errands</option>
+                <option value="moderate">Moderate: yard work / hiking</option>
+                <option value="hard">Hard: running / hockey / sports</option>
+                <option value="work">Outdoor work / long exposure</option>
+              </select>
+            </label>
+            <p id="activityAdvice" class="advice">Load weather for activity-specific guidance.</p>
+            <div class="mini-stats">
+              <div><span>Peak today</span><strong id="peakToday">--</strong></div>
+              <div><span>Worst hour</span><strong id="worstHour">--</strong></div>
+              <div><span>Your alert</span><strong id="alertStatus">--</strong></div>
+            </div>
+          </div>
+        </div>
 
-    <main id="guide" class="tabpane hidden grid">
-      <section class="panel"><h2>Wet-Bulb Risk Guide</h2><p class="advice"><b>&lt;75°F:</b> usually manageable.<br><b>75–80°F:</b> hard exertion gets much tougher.<br><b>80–85°F:</b> high risk during sports/work; cool aggressively.<br><b>85–88°F:</b> dangerous, especially for long exposure.<br><b>88°F+:</b> extreme danger; postpone strenuous outdoor activity where possible.</p></section>
-      <section class="panel"><h2>Important Limits</h2><p class="advice">This is guidance, not medical advice. Sun, wind, clothing, hydration, acclimatization, age, medications, illness, and exertion can change risk dramatically. Wet bulb is not the same as Heat Index.</p></section>
-      <section class="panel wide"><h2>Data</h2><p class="advice">Forecast mode uses public National Weather Service hourly forecast grids and a free ZIP-code geocoder. It works for U.S. locations. If NWS omits humidity/dew point for a grid hour, that hour may be skipped.</p></section>
+        <div class="card">
+          <div class="card-title-row"><h2>Favorites & Alert Threshold</h2><button id="saveFavoriteBtn" class="secondary">Save Current Favorite</button></div>
+          <div class="input-row">
+            <label class="field compact"><span>Wet-bulb alert °F</span><input id="alertInput" type="number" step="0.1" placeholder="80" /></label>
+            <button id="saveAlertBtn" class="secondary">Save Alert</button>
+            <button id="clearFavoritesBtn" class="ghost">Clear Favorites</button>
+          </div>
+          <div id="favoritesList" class="chips"></div>
+        </div>
+      </section>
+
+      <section id="forecast" class="panel">
+        <div class="card">
+          <h2>Hourly Wet-Bulb Chart</h2>
+          <canvas id="hourlyChart" width="640" height="260" aria-label="Hourly wet-bulb chart"></canvas>
+        </div>
+        <div class="grid two">
+          <div class="card"><h2>Next 24 Hours</h2><div id="hourlyList" class="forecast-list"></div></div>
+          <div class="card"><h2>5-Day Peak Outlook</h2><div id="dailyList" class="forecast-list"></div></div>
+        </div>
+      </section>
+
+      <section id="map" class="panel">
+        <div class="card">
+          <div class="card-title-row"><div><h2>Regional Wet-Bulb Board</h2><p>Quick compare default Northeast locations plus favorites.</p></div><button id="refreshRegionalBtn" class="primary">Refresh Board</button></div>
+          <div id="regionalBoard" class="regional-board"></div>
+        </div>
+      </section>
+
+      <section id="calc" class="panel">
+        <div class="grid two">
+          <div class="card">
+            <h2>Manual Calculator</h2>
+            <label class="field"><span>Temperature</span><input id="manualTemp" type="number" step="0.1" placeholder="95" /></label>
+            <div class="segmented"><button id="unitF" class="selected">°F</button><button id="unitC">°C</button></div>
+            <label class="field"><span>Humidity input</span><select id="manualMode"><option value="dew">Dew Point</option><option value="rh">Relative Humidity</option></select></label>
+            <label class="field"><span id="manualHumidityLabel">Dew point</span><input id="manualHumidity" type="number" step="0.1" placeholder="74" /></label>
+            <button id="manualCalcBtn" class="primary">Calculate</button>
+            <p class="status">Calculates automatically as you type. No demo button.</p>
+          </div>
+          <div class="card result-card">
+            <p class="eyebrow">Result</p>
+            <div class="big-readout"><span id="manualWb">--</span><small id="manualWbUnit">°F wet bulb</small></div>
+            <p id="manualRisk" class="risk-line">Enter temperature and humidity.</p>
+            <div class="metric-grid">
+              <div><span>Heat index</span><strong id="manualHi">--</strong></div>
+              <div><span>Dew point</span><strong id="manualDew">--</strong></div>
+              <div><span>RH</span><strong id="manualRh">--</strong></div>
+              <div><span>Vapor pressure</span><strong id="manualVp">--</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="guide" class="panel">
+        <div class="card prose">
+          <h2>Wet-Bulb Risk Guide</h2>
+          <p><strong>&lt;75°F:</strong> usually manageable for many people, though sun and exertion still matter.</p>
+          <p><strong>75–80°F:</strong> hard exertion gets much tougher. Hydrate and take breaks.</p>
+          <p><strong>80–85°F:</strong> high risk during sports/work; use shade, cooling, and frequent breaks.</p>
+          <p><strong>85–88°F:</strong> dangerous, especially for long exposure.</p>
+          <p><strong>88°F+:</strong> extreme danger; postpone strenuous outdoor activity where possible.</p>
+          <h2>Important Limits</h2>
+          <p>This is guidance, not medical advice. Sun, wind, clothing, hydration, acclimatization, age, medications, illness, and exertion can change risk dramatically. Wet bulb is not the same as Heat Index.</p>
+          <h2>Data</h2>
+          <p>Forecast mode uses public National Weather Service hourly forecast grids and a free ZIP-code geocoder. It works for U.S. locations. If NWS omits humidity or dew point for a grid hour, that hour may be skipped.</p>
+        </div>
+      </section>
     </main>
-    <div class="footer">Heat Stress Pro v3.0 • Static/free hosting friendly • Works best on GitHub Pages over HTTPS.</div>
   </div>
-<script>
-const $=id=>document.getElementById(id); const F=c=>c*9/5+32; const C=f=>(f-32)*5/9; const rnd=(n,d=1)=>Number.isFinite(n)?n.toFixed(d):'--';
-function satVP(c){return 6.112*Math.exp((17.67*c)/(c+243.5));} function rhFromTd(tC,tdC){return Math.max(0,Math.min(100,100*satVP(tdC)/satVP(tC)));} function tdFromRH(tC,rh){const ln=Math.log(rh/100)+(17.67*tC)/(243.5+tC);return 243.5*ln/(17.67-ln)}
-function wetBulbC(tC,rh){return tC*Math.atan(0.151977*Math.sqrt(rh+8.313659))+Math.atan(tC+rh)-Math.atan(rh-1.676331)+0.00391838*Math.pow(rh,1.5)*Math.atan(0.023101*rh)-4.686035;} function heatIndexF(tF,rh){if(tF<80)return tF;return -42.379+2.04901523*tF+10.14333127*rh-0.22475541*tF*rh-0.00683783*tF*tF-0.05481717*rh*rh+0.00122874*tF*tF*rh+0.00085282*tF*rh*rh-0.00000199*tF*tF*rh*rh;}
-function risk(wbF){ if(wbF<75)return ['Lower','good','Normal precautions. Heat-sensitive people should still pace themselves.']; if(wbF<80)return ['Elevated','moderate','Use shade, water, and breaks for hard outdoor activity.']; if(wbF<85)return ['High','high','Strenuous activity becomes risky. Shorten sessions and cool aggressively.']; if(wbF<88)return ['Danger','danger','Avoid prolonged exertion. Watch closely for heat illness symptoms.']; return ['Extreme','extreme','Very dangerous. Consider postponing outdoor activity.'];}
-function calcVals(t, second, units='F', input='dewpoint'){let tC=units==='F'?C(t):t; let rh,tdC;if(input==='dewpoint'){tdC=units==='F'?C(second):second; rh=rhFromTd(tC,tdC)}else{rh=second;tdC=tdFromRH(tC,rh)} let wbC=wetBulbC(tC,rh), wbF=F(wbC), hiF=heatIndexF(F(tC),rh), vp=satVP(tdC); return {tC,rh,tdC,wbF,wbC,hiF,vp};}
-function tempValue(obj){if(!obj)return null; if(typeof obj==='number')return obj; if(obj.value==null)return null; let u=obj.unitCode||''; return u.includes('degC')?F(obj.value):obj.value;} function pctValue(obj){return obj&&obj.value!=null?obj.value:null}
-async function nwsByLatLon(lat,lon){let p=await fetch(`https://api.weather.gov/points/${lat},${lon}`,{headers:{'Accept':'application/geo+json'}}).then(r=>{if(!r.ok)throw new Error('NWS location lookup failed');return r.json()});let h=await fetch(p.properties.forecastHourly).then(r=>{if(!r.ok)throw new Error('Hourly forecast failed');return r.json()});return {place:`${p.properties.relativeLocation?.properties?.city||'Selected location'}, ${p.properties.relativeLocation?.properties?.state||''}`,periods:h.properties.periods||[],lat,lon};}
-async function geocodeZip(zip){let z=await fetch(`https://api.zippopotam.us/us/${zip}`).then(r=>{if(!r.ok)throw new Error('ZIP not found');return r.json()});let p=z.places[0];return {lat:p.latitude,lon:p.longitude,name:`${p['place name']}, ${p['state abbreviation']}`,zip};}
-function derive(period){let tF=period.temperatureUnit==='C'?F(period.temperature):period.temperature; let rh=pctValue(period.relativeHumidity); let dpF=tempValue(period.dewpoint); if(rh==null&&dpF!=null)rh=rhFromTd(C(tF),C(dpF)); if(dpF==null&&rh!=null)dpF=F(tdFromRH(C(tF),rh)); if(rh==null)return null; let v=calcVals(tF, dpF??rh,'F',dpF!=null?'dewpoint':'rh'); return {...v,tF,dpF,rh,dt:new Date(period.startTime),name:period.name,short:period.shortForecast||''};}
-let current={place:null, vals:[], zip:null, lat:null, lon:null};
-function hourCard(v){let r=risk(v.wbF), w=Math.max(8,Math.min(100,(v.wbF-60)*3));return `<div class="hour"><b>${v.dt.toLocaleTimeString([], {hour:'numeric'})}</b><div><span class="pill">T ${rnd(v.tF,0)}°</span><span class="pill">DP ${rnd(v.dpF,0)}°</span><span class="pill">RH ${rnd(v.rh,0)}%</span><div class="bar"><div class="fill" style="width:${w}%"></div></div><div class="smallmuted">${v.short}</div></div><div><b>${rnd(v.wbF)}°</b><br><span class="badge ${r[1]}">${r[0]}</span></div></div>`}
-function dayCard(label, vals){let max=vals.reduce((a,b)=>b.wbF>a.wbF?b:a,vals[0]);let hi=Math.max(...vals.map(x=>x.tF));let dp=Math.max(...vals.map(x=>x.dpF??-99));let r=risk(max.wbF);return `<div class="day"><b>${label}</b><div><span class="pill">Max T ${rnd(hi,0)}°</span><span class="pill">Max DP ${rnd(dp,0)}°</span><div class="smallmuted">Peak around ${max.dt.toLocaleTimeString([], {hour:'numeric'})}</div></div><div><b>${rnd(max.wbF)}°</b><br><span class="badge ${r[1]}">${r[0]}</span></div></div>`}
-function renderAll(place, vals){current.place=place; current.vals=vals; localStorage.setItem('hsp-current',JSON.stringify({place, vals: vals.slice(0,48).map(v=>({tF:v.tF,dpF:v.dpF,rh:v.rh,wbF:v.wbF,hiF:v.hiF,dt:v.dt,short:v.short}))}));let now=vals[0], peak=vals.slice(0,24).reduce((a,b)=>b.wbF>a.wbF?b:a,vals[0]);let r=risk(now.wbF);$('placeLabel').textContent=place;$('dashWb').textContent=`${rnd(now.wbF)}°`;$('dashTemp').textContent=`${rnd(now.tF,0)}°F • ${now.short}`;$('dashBadge').textContent=r[0];$('dashBadge').className='badge '+r[1];$('dashAdvice').textContent=r[2];$('dashHi').textContent=`${rnd(now.hiF)}°`;$('dashDp').textContent=`${rnd(now.dpF)}°`;$('dashRh').textContent=`${rnd(now.rh,0)}%`;$('dashPeak').textContent=`${rnd(peak.wbF)}°`;let worst=peak.dt.toLocaleTimeString([], {hour:'numeric'});$('worstHour').textContent=worst;updateActivity();$('hours').innerHTML=vals.slice(0,24).map(hourCard).join('');let groups={}; vals.slice(0,120).forEach(v=>{let k=v.dt.toLocaleDateString([], {weekday:'short', month:'numeric', day:'numeric'}); (groups[k]??=[]).push(v)});$('days').innerHTML=Object.entries(groups).slice(0,5).map(([k,a])=>dayCard(k,a)).join('');drawChart(vals.slice(0,24));checkAlert(peak);}
-function updateActivity(){if(!current.vals.length)return;let peak=current.vals.slice(0,24).reduce((a,b)=>b.wbF>a.wbF?b:a,current.vals[0]);let act=$('activity').value;let base=risk(peak.wbF)[0];let msg={light:'Light activity is usually okay with water and shade, but avoid the hottest hour if you feel symptoms.',moderate:'Take scheduled breaks and move hardest work earlier/later. Shade matters.',hard:'For running/hockey/sports, reduce intensity and duration; consider morning/evening if peak WB is high.',work:'Use work/rest cycles, buddy checks, cooling, and shade. Long exposure changes the risk.'}[act]; if(peak.wbF>=80&&['hard','work'].includes(act))msg='Strong caution: peak wet bulb is high enough that hard exertion or long outdoor work can become risky. Shorten, reschedule, or add aggressive cooling.'; if(peak.wbF>=85)msg='Danger: consider postponing strenuous activity. Hydration alone is not enough.';$('activityAdvice').textContent=`Today peaks near ${rnd(peak.wbF)}°F wet bulb (${base}). ${msg}`;$('suggestAlert').textContent= act==='light'?'82°':act==='moderate'?'80°':'78°';}
-function drawChart(vals){let c=$('chart'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(15,23,42,.25)';ctx.fillRect(0,0,w,h);let min=65,max=90,pad=34;ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=1;[75,80,85].forEach(yv=>{let y=h-pad-(yv-min)/(max-min)*(h-2*pad);ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.65)';ctx.font='13px system-ui';ctx.fillText(yv+'°',6,y+4)});ctx.strokeStyle='#35d0ff';ctx.lineWidth=4;ctx.beginPath();vals.forEach((v,i)=>{let x=pad+i/(vals.length-1)*(w-2*pad),y=h-pad-(v.wbF-min)/(max-min)*(h-2*pad);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle='#f8fafc';vals.forEach((v,i)=>{if(i%4===0){let x=pad+i/(vals.length-1)*(w-2*pad);ctx.fillText(v.dt.toLocaleTimeString([],{hour:'numeric'}),x-12,h-9)}})}
-async function loadByZip(zip){$('status').textContent='Loading forecast...';let g=await geocodeZip(zip);current.zip=zip;current.lat=g.lat;current.lon=g.lon;let d=await nwsByLatLon(g.lat,g.lon);let vals=d.periods.map(derive).filter(Boolean);if(!vals.length)throw new Error('No humidity/dew point data available for this grid.');$('status').innerHTML=`<span class="success">Loaded ${g.name}.</span>`;renderAll(g.name, vals)}
-function showErr(e){$('status').innerHTML=`<span class="error">${e.message||e}</span>`}
-function renderCalc(){let t=parseFloat($('temp').value), s=parseFloat($('second').value), units=$('units').value, input=$('inputType').value; $('secondLabel').textContent=input==='dewpoint'?`Dew Point ${units==='F'?'°F':'°C'}`:'Relative Humidity %'; if(!Number.isFinite(t)||!Number.isFinite(s))return; let v=calcVals(t,s,units,input); let r=risk(v.wbF); $('wbBig').textContent=units==='F'?`${rnd(v.wbF)}°F`:`${rnd(v.wbC)}°C`; $('riskBadge').textContent=r[0]; $('riskBadge').className='badge '+r[1]; $('advice').textContent=r[2]; $('hiVal').textContent=units==='F'?`${rnd(v.hiF)}°F`:`${rnd(C(v.hiF))}°C`; $('dpVal').textContent=units==='F'?`${rnd(F(v.tdC))}°F`:`${rnd(v.tdC)}°C`; $('rhVal').textContent=`${rnd(v.rh,0)}%`; $('vpVal').textContent=`${rnd(v.vp,1)} mb`; localStorage.setItem('hsp-last',JSON.stringify({t,s,units,input}));}
-function getFavs(){return JSON.parse(localStorage.getItem('hsp-favs')||'[]')} function setFavs(f){localStorage.setItem('hsp-favs',JSON.stringify(f));renderFavs()} function renderFavs(){let f=getFavs();$('favList').innerHTML=f.length?f.map((x,i)=>`<div class="fav"><div><b>${x.name}</b><div class="smallmuted">${x.zip||'Saved location'} • ${x.lat}, ${x.lon}</div></div><button class="secondary" onclick="loadFav(${i})">Load</button></div>`).join(''):'<div class="status">No favorites saved yet.</div>'} window.loadFav=i=>{let x=getFavs()[i]; if(x.zip)loadByZip(x.zip).catch(showErr); else nwsByLatLon(x.lat,x.lon).then(d=>renderAll(x.name||d.place,d.periods.map(derive).filter(Boolean))).catch(showErr)};
-function checkAlert(peak){let th=parseFloat(localStorage.getItem('hsp-alert')||$('alertThreshold').value||'80');$('alertThreshold').value=th;if(peak.wbF>=th)$('status').innerHTML+=` <span class="error">Alert: today peaks above ${th}°F WB.</span>`}
-const defaultMap=[['Groton MA','01450'],['Concord MA','01742'],['Mashpee MA','02649'],['Boston MA','02108'],['Hartford CT','06103'],['Providence RI','02903'],['Newark NJ','07102'],['Philadelphia PA','19107']];
-async function refreshMap(){$('mapStatus').textContent='Loading regional board...';$('mapGrid').innerHTML='';let items=[...defaultMap,...getFavs().filter(f=>f.zip).map(f=>[f.name,f.zip])];let out=[];for(let [name,zip] of items.slice(0,12)){try{let g=await geocodeZip(zip);let d=await nwsByLatLon(g.lat,g.lon);let vals=d.periods.map(derive).filter(Boolean).slice(0,24);let peak=vals.reduce((a,b)=>b.wbF>a.wbF?b:a,vals[0]);let r=risk(peak.wbF);out.push(`<div class="mapcell"><div class="place">${name}</div><div class="wb">${rnd(peak.wbF)}°</div><span class="badge ${r[1]}">${r[0]}</span><div class="smallmuted">Peak ${peak.dt.toLocaleTimeString([],{hour:'numeric'})}</div></div>`)}catch(e){out.push(`<div class="mapcell"><div class="place">${name}</div><div class="smallmuted error">Failed</div></div>`)}}$('mapGrid').innerHTML=out.join('');$('mapStatus').innerHTML='<span class="success">Regional board updated.</span>'}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tabpane').forEach(p=>p.classList.add('hidden'));$(b.dataset.tab).classList.remove('hidden')});['temp','second','units','inputType'].forEach(id=>$(id).addEventListener('input',renderCalc));$('calcBtn').onclick=renderCalc;$('zipBtn').onclick=()=>loadByZip($('zip').value.trim()).catch(showErr);$('locBtn').onclick=()=>{if(!navigator.geolocation){showErr('Geolocation is not available.');return}$('status').textContent='Getting your location...';navigator.geolocation.getCurrentPosition(pos=>nwsByLatLon(pos.coords.latitude,pos.coords.longitude).then(d=>{current.lat=pos.coords.latitude;current.lon=pos.coords.longitude;renderAll(d.place,d.periods.map(derive).filter(Boolean));$('status').innerHTML=`<span class="success">Loaded ${d.place}.</span>`}).catch(showErr),()=>showErr('Location permission denied. Try ZIP code instead.'))};$('activity').onchange=updateActivity;$('saveAlert').onclick=()=>{localStorage.setItem('hsp-alert',$('alertThreshold').value);alert('Alert threshold saved. The app will flag exceedance when opened.');};$('addFav').onclick=()=>{if(!current.place)return alert('Load a location first.');let f=getFavs();f=f.filter(x=>x.name!==current.place);f.push({name:current.place,zip:current.zip,lat:current.lat,lon:current.lon});setFavs(f);};$('clearFavs').onclick=()=>setFavs([]);$('refreshMap').onclick=refreshMap;
-try{let last=JSON.parse(localStorage.getItem('hsp-last')||'{}'); if(last.t){$('temp').value=last.t;$('second').value=last.s;$('units').value=last.units;$('inputType').value=last.input}}catch{} renderCalc(); renderFavs(); $('alertThreshold').value=localStorage.getItem('hsp-alert')||'80'; if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{})}
-</script>
+  <script src="app.js?v=3.1.0"></script>
 </body>
 </html>
