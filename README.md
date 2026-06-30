@@ -1,47 +1,26 @@
-# Heat Stress Pro
+# Heat Stress Pro v2.0
 
-A free, static, iPhone-friendly web app for calculating:
+Static GitHub Pages app for wet bulb, heat index, dew point/RH conversion, and U.S. hourly forecasts.
 
-- Wet bulb temperature
-- Heat index
-- Relative humidity
-- Dew point
-- Basic heat-stress category
+## Upgrade steps
 
-It works as a Progressive Web App when hosted on GitHub Pages.
-
-## How to publish on GitHub Pages
-
-1. Create a new GitHub repository, for example `heat-stress-pro`.
-2. Upload all files in this folder to the repository root:
+1. Extract `heat-stress-pro-v2.zip`.
+2. Open your GitHub repo: https://github.com/bmccann15/heat-stress-pro
+3. Click **Add file → Upload files**.
+4. Drag these extracted files into the repo root:
    - `index.html`
-   - `style.css`
-   - `app.js`
-   - `manifest.webmanifest`
+   - `manifest.json`
+   - `icon.svg`
    - `service-worker.js`
-   - `icons/`
-3. In GitHub, go to **Settings → Pages**.
-4. Under **Build and deployment**, choose:
-   - Source: **Deploy from a branch**
-   - Branch: **main**
-   - Folder: **/root**
-5. Click **Save**.
-6. After a minute or two, GitHub will show your site URL.
+   - `README.md`
+5. Commit changes.
+6. Wait for GitHub Pages to redeploy.
+7. Open https://bmccann15.github.io/heat-stress-pro/
 
-It will usually look like:
+## Forecast source
 
-`https://YOUR-USERNAME.github.io/heat-stress-pro/`
+Forecast mode uses free public APIs:
+- Zippopotam.us for U.S. ZIP code to lat/lon lookup
+- National Weather Service API for hourly forecast data
 
-## Install on iPhone
-
-1. Open the GitHub Pages URL in Safari.
-2. Tap the Share button.
-3. Tap **Add to Home Screen**.
-4. Name it `Heat Stress`.
-5. Tap **Add**.
-
-## Notes
-
-- Wet bulb is calculated using the Stull approximation.
-- Heat index uses the standard NOAA/NWS-style regression formula.
-- This is for practical guidance, not medical diagnosis or official occupational safety decisions.
+NWS data only supports U.S. locations.
